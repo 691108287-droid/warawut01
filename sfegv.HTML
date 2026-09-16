@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Mini Sport Shop ร้านขายอุปกรณ์กีฬาออนไลน์">
+  <title>Mini Sport Shop</title>
+
+  <style>
+    :root {
+      --primary: #0755c9;
+      --primary-dark: #063b8c;
+      --accent: #20d99a;
+      --dark: #10233f;
+      --gray: #68768a;
+      --light: #f3f7fb;
+      --white: #ffffff;
+      --danger: #e63946;
+      --border: #dde5ef;
+      --shadow: 0 10px 25px rgba(13, 48, 89, 0.1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+      color: var(--dark);
+      background: var(--light);
+      line-height: 1.6;
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .container {
+      width: min(1050px, calc(100% - 30px));
+      margin: auto;
+    }
+
+    /* เมนู */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: rgba(255, 255, 255, 0.96);
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(10px);
+    }
+
+    .nav-content {
+      min-height: 68px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+    }
+
+    .logo {
+      color: var(--primary);
+      font-size: 1.25rem;
+      font-weight: 900;
+      text-decoration: none;
+    }
+
+    .cart-button {
+      padding: 10px 16px;
+      color: var(--white);
+      background: var(--primary);
+      border: 0;
+      border-radius: 10px;
+      font-weight: 800;
+    }
+
+    .cart-button:hover {
+      background: var(--primary-dark);
+    }
+
+    .cart-count {
+      min-width: 22px;
+      display: inline-block;
+      margin-left: 5px;
+      padding: 1px 6px;
+      color: var(--dark);
+      background: var(--accent);
+      border-radius: 20px;
+    }
+
+    /* ส่วนแนะนำ */
+    .hero {
+      padding: 60px 0;
+      color: var(--white);
+      background:
+        radial-gradient(circle at 85% 25%, rgba(32, 217, 154, 0.45), transparent 25%),
+        linear-gradient(120deg, #071b3b, var(--primary));
+    }
+
+    .hero-content {
+      max-width: 670px;
+    }
+
+    .hero-label {
+      display: inline-block;
+      margin-bottom: 12px;
+      padding: 6px 12px;
+      color: #a9ffe2;
+      background: rgba(32, 217, 154, 0.14);
+      border-radius: 30px;
+      font-weight: 700;
+    }
+
+    .hero h1 {
+      font-size: clamp(2rem, 7vw, 3.8rem);
+      line-height: 1.12;
+    }
+
+    .hero h1 span {
+      color: var(--accent);
+    }
+
+    .hero p {
+      max-width: 560px;
+      margin: 16px 0 24px;
+      color: #dbe8ff;
+    }
+
+    .shop-link {
+      display: inline-block;
+      padding: 11px 20px;
+      color: var(--dark);
+      background: var(--accent);
+      border-radius: 10px;
+      font-weight: 900;
+      text-decoration: none;
+    }
+
+    /* สินค้า */
+    .products-section {
+      padding: 55px 0;
+    }
+
+    .section-title {
+      margin-bottom: 20px;
+    }
+
+    .section-title h2 {
+      font-size: 1.8rem;
+    }
+
+    .section-title p {
+      color: var(--gray);
+    }
+
+    .filters {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 12px;
+      margin-bottom: 22px;
+    }
+
+    .field {
+      width: 100%;
+      min-height: 45px;
+      padding: 10px 13px;
+      background: var(--white);
+      border: 1px solid #cbd5e1;
+      border-radius: 10px;
+      outline: none;
+    }
+
+    .field:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(7, 85, 201, 0.12);
+    }
+
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .product-card {
+      overflow: hidden;
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+      transition: 0.2s;
+    }
+
+    .product-card:hover {
+      transform: translateY(-4px);
+    }
+
+    .product-image {
+      min-height: 150px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, #e8f2ff, #e4fff6);
+      font-size: 4.5rem;
+    }
+
+    .product-body {
+      padding: 16px;
+    }
+
+    .category {
+      color: var(--primary);
+      font-size: 0.8rem;
+      font-weight: 800;
+    }
+
+    .product-body h3 {
+      margin: 4px 0;
+      font-size: 1.05rem;
+    }
+
+    .rating {
+      color: #f59e0b;
+      font-size: 0.85rem;
+    }
+
+    .product-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-top: 15px;
+    }
+
+    .price {
+      font-size: 1.15rem;
+      font-weight: 900;
+    }
+
+    .add-button {
+      padding: 9px 12px;
+      color: var(--white);
+      background: var(--primary);
+      border: 0;
+      border-radius: 9px;
+      font-weight: 800;
+    }
+
+    .add-button:hover {
+      background: var(--primary-dark);
+    }
+
+    .empty-result {
+      grid-column: 1 / -1;
+      padding: 40px;
+      color: var(--gray);
+      background: var(--white);
+      border: 1px dashed #aebdce;
+      border-radius: 15px;
+      text-align: center;
+    }
+
+    /* ตะกร้า */
+    .overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 30;
+      visibility: hidden;
+      opacity: 0;
+      background: rgba(4, 19, 41, 0.6);
+      transition: 0.25s;
+    }
+
+    .overlay.show {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    .cart-panel {
+      position: fixed;
+      top: 0;
+      right: 0;
+      z-index: 40;
+      width: min(400px, 100%);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background: var(--white);
+      transform: translateX(105%);
+      transition: 0.28s;
+    }
+
+    .cart-panel.open {
+      transform: translateX(0);
+    }
+
+    .cart-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .close-button {
+      width: 38px;
+      height: 38px;
+      border: 0;
+      border-radius: 9px;
+      font-size: 1.15rem;
+    }
+
+    .cart-items {
+      flex: 1;
+      overflow-y: auto;
+      padding: 8px 18px;
+    }
+
+    .empty-cart {
+      padding: 60px 10px;
+      color: var(--gray);
+      text-align: center;
+    }
+
+    .empty-cart span {
+      display: block;
+      font-size: 4rem;
+    }
+
+    .cart-item {
+      display: grid;
+      grid-template-columns: 48px 1fr auto;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .item-icon {
+      width: 48px;
+      height: 48px;
+      display: grid;
+      place-items: center;
+      background: #edf5ff;
+      border-radius: 10px;
+      font-size: 1.7rem;
+    }
+
+    .item-name {
+      font-size: 0.9rem;
+    }
+
+    .item-price {
+      color: var(--primary);
+      font-size: 0.82rem;
+      font-weight: 800;
+    }
+
+    .quantity {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      margin-top: 5px;
+    }
+
+    .quantity button {
+      width: 26px;
+      height: 26px;
+      border: 0;
+      border-radius: 7px;
+      font-weight: 900;
+    }
+
+    .remove-button {
+      color: var(--danger);
+      background: none;
+      border: 0;
+      font-size: 1.05rem;
+    }
+
+    .cart-summary {
+      padding: 18px;
+      background: #f6f9fd;
+      border-top: 1px solid var(--border);
+    }
+
+    .total-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 13px;
+      font-size: 1.15rem;
+      font-weight: 900;
+    }
+
+    .checkout-button {
+      width: 100%;
+      min-height: 48px;
+      color: var(--dark);
+      background: var(--accent);
+      border: 0;
+      border-radius: 10px;
+      font-weight: 900;
+    }
+
+    .checkout-button:disabled {
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
+
+    /* ข้อความแจ้งเตือน */
+    .toast {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      z-index: 50;
+      max-width: 300px;
+      padding: 12px 16px;
+      color: var(--white);
+      background: var(--dark);
+      border-radius: 10px;
+      opacity: 0;
+      transform: translateY(15px);
+      pointer-events: none;
+      transition: 0.2s;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    footer {
+      padding: 25px 0;
+      color: #d9e4f4;
+      background: #081a35;
+      text-align: center;
+    }
+
+    @media (max-width: 750px) {
+      .product-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 520px) {
+      .hero {
+        padding: 45px 0;
+      }
+
+      .filters,
+      .product-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .product-image {
+        min-height: 130px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <nav>
+    <div class="container nav-content">
+      <a class="logo" href="#">⚡ MINI SPORT</a>
+      <button class="cart-button" id="openCart" type="button">
+        🛒 ตะกร้า <span class="cart-count" id="cartCount">0</span>
+      </button>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div class="container hero-content">
+      <span class="hero-label">อุปกรณ์กีฬาเพื่อทุกเป้าหมาย</span>
+      <h1>พร้อมสนุกกับกีฬา <span>ในแบบของคุณ</span></h1>
+      <p>เลือกซื้ออุปกรณ์กีฬาคุณภาพดี ค้นหาง่าย ขั้นตอนไม่ซับซ้อน และรองรับการใช้งานบนมือถือ</p>
+      <a class="shop-link" href="#products">เลือกซื้อสินค้า</a>
+    </div>
+  </header>
+
+  <main>
+    <section class="products-section" id="products">
+      <div class="container">
+        <div class="section-title">
+          <h2>สินค้าของเรา</h2>
+          <p id="resultText">พบสินค้า 6 รายการ</p>
+        </div>
+
+        <div class="filters">
+          <input
+            class="field"
+            id="searchInput"
+            type="search"
+            placeholder="🔍 ค้นหาสินค้า..."
+            aria-label="ค้นหาสินค้า"
+          >
+
+          <select class="field" id="categoryFilter" aria-label="เลือกหมวดหมู่">
+            <option value="all">ทุกหมวดหมู่</option>
+            <option value="ฟุตบอล">ฟุตบอล</option>
+            <option value="วิ่ง">วิ่ง</option>
+            <option value="แบดมินตัน">แบดมินตัน</option>
+            <option value="ฟิตเนส">ฟิตเนส</option>
+          </select>
+        </div>
+
+        <div class="product-grid" id="productGrid"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <strong>MINI SPORT</strong>
+      <p>เว็บร้านขายอุปกรณ์กีฬาขนาดเล็ก</p>
+    </div>
+  </footer>
+
+  <div class="overlay" id="overlay"></div>
+
+  <aside class="cart-panel" id="cartPanel" aria-label="ตะกร้าสินค้า">
+    <div class="cart-header">
+      <h2>ตะกร้าสินค้า</h2>
+      <button class="close-button" id="closeCart" type="button" aria-label="ปิดตะกร้า">✕</button>
+    </div>
+
+    <div class="cart-items" id="cartItems"></div>
+
+    <div class="cart-summary">
+      <div class="total-row">
+        <span>ยอดรวม</span>
+        <span id="totalPrice">฿0</span>
+      </div>
+      <button class="checkout-button" id="checkoutButton" type="button">
+        ยืนยันการสั่งซื้อ
+      </button>
+    </div>
+  </aside>
+
+  <div class="toast" id="toast" role="status"></div>
+
+  <script>
+    const products = [
+      {
+        id: 1,
+        name: "ลูกฟุตบอล Match",
+        category: "ฟุตบอล",
+        price: 590,
+        rating: 4.9,
+        icon: "⚽"
+      },
+      {
+        id: 2,
+        name: "รองเท้าวิ่ง Active",
+        category: "วิ่ง",
+        price: 1290,
+        rating: 4.8,
+        icon: "👟"
+      },
+      {
+        id: 3,
+        name: "ไม้แบดมินตัน Carbon",
+        category: "แบดมินตัน",
+        price: 890,
+        rating: 4.7,
+        icon: "🏸"
+      },
+      {
+        id: 4,
+        name: "ดัมเบล 5 กิโลกรัม",
+        category: "ฟิตเนส",
+        price: 690,
+        rating: 4.6,
+        icon: "🏋️"
+      },
+      {
+        id: 5,
+        name: "เสื่อโยคะ Sport Mat",
+        category: "ฟิตเนส",
+        price: 450,
+        rating: 4.7,
+        icon: "🧘"
+      },
+      {
+        id: 6,
+        name: "กระบอกน้ำ Runner",
+        category: "วิ่ง",
+        price: 290,
+        rating: 4.5,
+        icon: "🥤"
+      }
+    ];
+
+    const productGrid = document.getElementById("productGrid");
+    const resultText = document.getElementById("resultText");
+    const searchInput = document.getElementById("searchInput");
+    const categoryFilter = document.getElementById("categoryFilter");
+    const cartPanel = document.getElementById("cartPanel");
+    const cartItems = document.getElementById("cartItems");
+    const cartCount = document.getElementById("cartCount");
+    const totalPrice = document.getElementById("totalPrice");
+    const checkoutButton = document.getElementById("checkoutButton");
+    const overlay = document.getElementById("overlay");
+    const toast = document.getElementById("toast");
+
+    let cart = loadCart();
+
+    function loadCart() {
+      try {
+        const saved = JSON.parse(localStorage.getItem("mini-sport-cart"));
+        return Array.isArray(saved) ? saved : [];
+      } catch {
+        return [];
+      }
+    }
+
+    function saveCart() {
+      localStorage.setItem("mini-sport-cart", JSON.stringify(cart));
+    }
+
+    function formatPrice(price) {
+      return new Intl.NumberFormat("th-TH", {
+        style: "currency",
+        currency: "THB",
+        maximumFractionDigits: 0
+      }).format(price);
+    }
+
+    function renderProducts() {
+      const keyword = searchInput.value.trim().toLowerCase();
+      const category = categoryFilter.value;
+
+      const filteredProducts = products.filter((product) => {
+        const matchesKeyword =
+          product.name.toLowerCase().includes(keyword) ||
+          product.category.toLowerCase().includes(keyword);
+
+        const matchesCategory =
+          category === "all" || product.category === category;
+
+        return matchesKeyword && matchesCategory;
+      });
+
+      resultText.textContent = `พบสินค้า ${filteredProducts.length} รายการ`;
+
+      if (filteredProducts.length === 0) {
+        productGrid.innerHTML = `
+          <div class="empty-result">
+            <h3>ไม่พบสินค้า</h3>
+            <p>ลองใช้คำค้นหาหรือหมวดหมู่อื่น</p>
+          </div>
+        `;
+        return;
+      }
+
+      productGrid.innerHTML = filteredProducts.map((product) => `
+        <article class="product-card">
+          <div class="product-image">${product.icon}</div>
+          <div class="product-body">
+            <span class="category">${product.category}</span>
+            <h3>${product.name}</h3>
+            <div class="rating">★ ${product.rating}</div>
+            <div class="product-footer">
+              <span class="price">${formatPrice(product.price)}</span>
+              <button
+                class="add-button"
+                type="button"
+                onclick="addToCart(${product.id})"
+              >
+                + ใส่ตะกร้า
+              </button>
+            </div>
+          </div>
+        </article>
+      `).join("");
+    }
+
+    function addToCart(productId) {
+      const existingItem = cart.find((item) => item.id === productId);
+
+      if (existingItem) {
+        existingItem.quantity += 1;
+      } else {
+        cart.push({ id: productId, quantity: 1 });
+      }
+
+      saveCart();
+      renderCart();
+      showToast("เพิ่มสินค้าลงในตะกร้าแล้ว");
+    }
+
+    function changeQuantity(productId, change) {
+      const item = cart.find((item) => item.id === productId);
+      if (!item) return;
+
+      item.quantity += change;
+
+      if (item.quantity <= 0) {
+        cart = cart.filter((item) => item.id !== productId);
+      }
+
+      saveCart();
+      renderCart();
+    }
+
+    function removeItem(productId) {
+      cart = cart.filter((item) => item.id !== productId);
+      saveCart();
+      renderCart();
+      showToast("ลบสินค้าออกจากตะกร้าแล้ว");
+    }
+
+    function renderCart() {
+      cart = cart.filter((item) =>
+        products.some((product) => product.id === item.id)
+      );
+
+      const itemCount = cart.reduce(
+        (total, item) => total + item.quantity,
+        0
+      );
+
+      const total = cart.reduce((sum, item) => {
+        const product = products.find((product) => product.id === item.id);
+        return sum + product.price * item.quantity;
+      }, 0);
+
+      cartCount.textContent = itemCount;
+      totalPrice.textContent = formatPrice(total);
+      checkoutButton.disabled = cart.length === 0;
+      saveCart();
+
+      if (cart.length === 0) {
+        cartItems.innerHTML = `
+          <div class="empty-cart">
+            <span>🛒</span>
+            <h3>ตะกร้ายังว่าง</h3>
+            <p>เลือกสินค้าที่ต้องการได้เลย</p>
+          </div>
+        `;
+        return;
+      }
+
+      cartItems.innerHTML = cart.map((item) => {
+        const product = products.find((product) => product.id === item.id);
+
+        return `
+          <div class="cart-item">
+            <div class="item-icon">${product.icon}</div>
+            <div>
+              <h4 class="item-name">${product.name}</h4>
+              <div class="item-price">${formatPrice(product.price)}</div>
+              <div class="quantity">
+                <button
+                  type="button"
+                  onclick="changeQuantity(${product.id}, -1)"
+                  aria-label="ลดจำนวน"
+                >−</button>
+                <strong>${item.quantity}</strong>
+                <button
+                  type="button"
+                  onclick="changeQuantity(${product.id}, 1)"
+                  aria-label="เพิ่มจำนวน"
+                >+</button>
+              </div>
+            </div>
+            <button
+              class="remove-button"
+              type="button"
+              onclick="removeItem(${product.id})"
+              aria-label="ลบสินค้า"
+            >🗑️</button>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function openCart() {
+      cartPanel.classList.add("open");
+      overlay.classList.add("show");
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeCart() {
+      cartPanel.classList.remove("open");
+      overlay.classList.remove("show");
+      document.body.style.overflow = "";
+    }
+
+    let toastTimer;
+
+    function showToast(message) {
+      clearTimeout(toastTimer);
+      toast.textContent = message;
+      toast.classList.add("show");
+
+      toastTimer = setTimeout(() => {
+        toast.classList.remove("show");
+      }, 2200);
+    }
+
+    searchInput.addEventListener("input", renderProducts);
+    categoryFilter.addEventListener("change", renderProducts);
+    document.getElementById("openCart").addEventListener("click", openCart);
+    document.getElementById("closeCart").addEventListener("click", closeCart);
+    overlay.addEventListener("click", closeCart);
+
+    checkoutButton.addEventListener("click", () => {
+      const orderId = "MS" + Date.now().toString().slice(-6);
+
+      cart = [];
+      saveCart();
+      renderCart();
+      closeCart();
+      showToast(`สั่งซื้อสำเร็จ เลขที่ ${orderId}`);
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") closeCart();
+    });
+
+    renderProducts();
+    renderCart();
+  </script>
+</body>
+</html>
